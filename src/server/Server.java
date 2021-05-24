@@ -10,7 +10,7 @@ import java.net.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Server<inputPacket, receivedData, sendingDataBuffer, outputPacket> {
+public class Server {
 
     private final Capture capture = new Capture();
     public Server() throws AWTException {
@@ -19,23 +19,19 @@ public class Server<inputPacket, receivedData, sendingDataBuffer, outputPacket> 
     String entry;
 
     public void startServer() throws IOException{
-        ServerSocket server= new ServerSocket(3345);
-        Socket client = server.accept();
-
-        System.out.print("Connection accepted.");
-
-        BufferedOutputStream out = new BufferedOutputStream(client.getOutputStream());
-        System.out.println("DataOutputStream  created");
-
-        DataInputStream in = new DataInputStream(client.getInputStream());
-        System.out.println("DataInputStream created");
-
-        System.out.println("Server reading from channel");
-        entry = in.readUTF();
-        capture.newCapture();
-
         new Thread(() -> {
             try {
+                ServerSocket server= new ServerSocket(3345);
+                Socket client = server.accept();
+                System.out.print("Connection accepted.");
+                BufferedOutputStream out = new BufferedOutputStream(client.getOutputStream());
+                System.out.println("DataOutputStream  created");
+                DataInputStream in = new DataInputStream(client.getInputStream());
+                System.out.println("DataInputStream created");
+                System.out.println("Server reading from channel");
+                entry = in.readUTF();
+                capture.newCapture();
+
                 byte[] bytes;
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 ImageIO.write(capture.getCapture(), "jpeg", baos);
@@ -44,7 +40,8 @@ public class Server<inputPacket, receivedData, sendingDataBuffer, outputPacket> 
                     out.write(bytes);
                     System.out.println(bytes.length);
                     out.flush();
-                    bytes = capture.getBaos();
+                    if (capture.getBaos()!=null)
+                        bytes = capture.getBaos();
                     entry = in.readUTF();
                 }
             } catch (IOException | NullPointerException e) {

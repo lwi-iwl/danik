@@ -29,12 +29,16 @@ public class Client {
                 while (true) {
                     is.reset();
                     int bytesRead = ois.read(buffer);
+                    System.out.println(bytesRead);
                     oos.writeUTF(clientCommand);
                     oos.flush();
                     newBi = ImageIO.read(is);
-                    board.setCapture(newBi);
-                    if (newBi!=null)
+                    if (newBi!=null) {
+                        board.setCapture(newBi);
                         board.repaint();
+                    }
+                    else
+                        System.out.println(0);
                 }
             }
             catch (IOException e) {
