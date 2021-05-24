@@ -7,8 +7,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,7 +26,6 @@ public class Server<inputPacket, receivedData, sendingDataBuffer, outputPacket> 
 
 
 
-    private final static int SERVICE_PORT=50001;
 
     public void startServer() throws IOException{
         ServerSocket server= new ServerSocket(3345);
@@ -44,31 +41,24 @@ public class Server<inputPacket, receivedData, sendingDataBuffer, outputPacket> 
 
         System.out.println("Server reading from channel");
         String entry = in.readUTF();
-
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
+        capture.newCapture();
+        new Thread(() -> {
+            try {
+                byte[] bytes;
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                try {
-                    ImageIO.write(capture.getCapture(), "jpg", baos);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                byte[] bytes = baos.toByteArray();
-                try {
-                    out.write(bytes, 0, bytes.length);
-                    System.out.println("Server Wrote message to client.");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                try {
+                ImageIO.write(capture.getCapture(), "jpg", baos);
+                bytes = baos.toByteArray();
+                while (true) {
+                    out.write(bytes);
                     out.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println(bytes.length);
+                    Thread.sleep(100);
+                    bytes = capture.getBaos();
                 }
+            } catch (IOException | InterruptedException e) {
+                System.out.println(e.getMessage());
             }
-        }, 10, 10);
+        }).start();
 
 
         //serverSocket.close();
