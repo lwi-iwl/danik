@@ -22,17 +22,13 @@ public class Client {
         DataOutputStream oos = new DataOutputStream(socket.getOutputStream());
         BufferedInputStream ois = new BufferedInputStream(socket.getInputStream());
         String clientCommand = "sd";
-        Input input = new Input();
         oos.writeUTF(clientCommand);
         oos.flush();
         new Thread(() -> {
-
             try {
-                input.setInputStream(is);
                 while (true) {
                     is.reset();
                     int bytesRead = ois.read(buffer);
-                    input.setInputStream(is);
                     oos.writeUTF(clientCommand);
                     oos.flush();
                     newBi = ImageIO.read(is);
@@ -45,8 +41,6 @@ public class Client {
                 System.out.println(e.getMessage());
             }
         }).start();
-
-        //input.startPaint(board);
 
     }
 

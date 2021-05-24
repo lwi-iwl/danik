@@ -33,11 +33,12 @@ public class Server<inputPacket, receivedData, sendingDataBuffer, outputPacket> 
         System.out.println("Server reading from channel");
         entry = in.readUTF();
         capture.newCapture();
+
         new Thread(() -> {
             try {
                 byte[] bytes;
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ImageIO.write(capture.getCapture(), "jpg", baos);
+                ImageIO.write(capture.getCapture(), "jpeg", baos);
                 bytes = baos.toByteArray();
                 while (true) {
                     out.write(bytes);
@@ -46,12 +47,11 @@ public class Server<inputPacket, receivedData, sendingDataBuffer, outputPacket> 
                     bytes = capture.getBaos();
                     entry = in.readUTF();
                 }
-            } catch (IOException e) {
+            } catch (IOException | NullPointerException e) {
                 System.out.println(e.getMessage());
             }
         }).start();
 
 
-        //serverSocket.close();
     }
 }

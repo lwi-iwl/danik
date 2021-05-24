@@ -10,7 +10,6 @@ public class Capture {
     private Robot robot = new Robot();
     private BufferedImage screenShot;
     private byte[] bytes;
-    Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
     public Capture() throws AWTException {
 
     }
@@ -21,7 +20,7 @@ public class Capture {
             while (true) {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
-                    ImageIO.write(screenShot, "jpg", baos);
+                    ImageIO.write(screenShot, "jpeg", baos);
                     bytes = baos.toByteArray();
                 }
             }
