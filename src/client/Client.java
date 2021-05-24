@@ -13,8 +13,7 @@ public class Client {
     }
 
     public void startClient(Board board) throws IOException {
-
-        Socket socket = new Socket("localhost", 3345);
+        Socket socket = new Socket("192.168.1.9", 3345);
         BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
         DataOutputStream oos = new DataOutputStream(socket.getOutputStream());
         BufferedInputStream ois = new BufferedInputStream(socket.getInputStream());
@@ -23,7 +22,7 @@ public class Client {
         oos.writeUTF(clientCommand);
         oos.flush();
         new Thread(() -> {
-            byte[] buffer = new byte[260000];
+            byte[] buffer = new byte[180000];
             try (InputStream is = new ByteArrayInputStream(buffer)){
                 input.setInputStream(is);
                 input.startPaint(board);
@@ -31,7 +30,6 @@ public class Client {
                     is.reset();
                     int bytesRead = ois.read(buffer);
                     input.setInputStream(is);
-                    System.out.println("client");
                 }
             }
             catch (IOException e) {

@@ -9,7 +9,7 @@ public class Start  extends JFrame{
         JFrame jf = new JFrame("For2D");
         jf.add(panel.getPanel());
         Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
-        jf.setSize(1000, 1000);
+        jf.setSize((int)Math.round(sSize.width*0.9), (int)Math.round(sSize.height*0.9));
         jf.setDefaultCloseOperation(jf.EXIT_ON_CLOSE);
         jf.setVisible(true);
         jf.setResizable(false);

@@ -9,15 +9,15 @@ public class Input {
     InputStream is;
     public void startPaint(Board board){
         new Thread(() -> {
+            BufferedImage newBi;
                 while (true) {
-                    BufferedImage newBi = null;
                     try {
                         newBi = ImageIO.read(is);
                     board.setCapture(newBi);
+                        if (newBi!=null)
                     board.repaint();
-                    System.out.println("input");
-                    Thread.sleep(100);
-                    } catch (IOException | InterruptedException e) {
+                    System.out.println("paint");
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -26,6 +26,7 @@ public class Input {
 
 
     public void setInputStream(InputStream is){
+        System.out.println("set");
         this.is = is;
     }
 }

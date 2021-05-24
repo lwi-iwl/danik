@@ -52,10 +52,9 @@ public class Server<inputPacket, receivedData, sendingDataBuffer, outputPacket> 
                     out.write(bytes);
                     out.flush();
                     System.out.println(bytes.length);
-                    Thread.sleep(100);
                     bytes = capture.getBaos();
                 }
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
         }).start();

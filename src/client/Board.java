@@ -23,6 +23,7 @@ public class Board extends JPanel {
     @Override
     public void paintComponent(Graphics g2) {
         super.paintComponent(g2);
+        if (capture!=null)
             g2.drawImage(capture, 0, 0, (int)Math.round(sSize.width*0.8), (int)Math.round(sSize.height*0.8), 0,0, capture.getWidth(), capture.getHeight(), null);
     }
 

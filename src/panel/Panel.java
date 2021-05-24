@@ -21,7 +21,6 @@ public class Panel {
         clientButton.setSize(sSize.width / 12, sSize.height / 40);
         clientButton.setLocation(0, 0);
         clientButton.setLayout(new BorderLayout());
-        panel.add(clientButton);
         clientButton.addActionListener(e -> {
             try {
                 client.startClient(board);
@@ -29,6 +28,7 @@ public class Panel {
                 ioException.printStackTrace();
             }
         });
+
 
         JButton serverButton = new JButton("Server");
         serverButton.setSize(sSize.width / 12, sSize.height / 40);
@@ -44,6 +44,7 @@ public class Panel {
         });
 
         panel.add(board);
+        panel.add(clientButton);
     }
 
     public JPanel getPanel(){
