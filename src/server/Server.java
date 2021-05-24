@@ -11,21 +11,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Server<inputPacket, receivedData, sendingDataBuffer, outputPacket> {
-    Timer timer = new Timer();
+
     private final Capture capture = new Capture();
     public Server() throws AWTException {
 
     }
-    public void doServer(Board board) {
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                board.repaint();
-            }
-        }, 10, 10);}
-
-
-
+    String entry;
 
     public void startServer() throws IOException{
         ServerSocket server= new ServerSocket(3345);
@@ -40,7 +31,7 @@ public class Server<inputPacket, receivedData, sendingDataBuffer, outputPacket> 
         System.out.println("DataInputStream created");
 
         System.out.println("Server reading from channel");
-        String entry = in.readUTF();
+        entry = in.readUTF();
         capture.newCapture();
         new Thread(() -> {
             try {
@@ -50,9 +41,10 @@ public class Server<inputPacket, receivedData, sendingDataBuffer, outputPacket> 
                 bytes = baos.toByteArray();
                 while (true) {
                     out.write(bytes);
-                    out.flush();
                     System.out.println(bytes.length);
+                    out.flush();
                     bytes = capture.getBaos();
+                    entry = in.readUTF();
                 }
             } catch (IOException e) {
                 System.out.println(e.getMessage());

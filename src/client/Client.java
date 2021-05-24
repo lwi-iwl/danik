@@ -1,7 +1,9 @@
 package client;
 
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
 
@@ -11,9 +13,11 @@ public class Client {
     public Client() throws AWTException {
 
     }
-
+    BufferedImage newBi;
+    byte[] buffer = new byte[180000];
+    InputStream is = new ByteArrayInputStream(buffer);
     public void startClient(Board board) throws IOException {
-        Socket socket = new Socket("192.168.1.9", 3345);
+        Socket socket = new Socket("localhost", 3345);
         BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
         DataOutputStream oos = new DataOutputStream(socket.getOutputStream());
         BufferedInputStream ois = new BufferedInputStream(socket.getInputStream());
@@ -22,14 +26,19 @@ public class Client {
         oos.writeUTF(clientCommand);
         oos.flush();
         new Thread(() -> {
-            byte[] buffer = new byte[180000];
-            try (InputStream is = new ByteArrayInputStream(buffer)){
+
+            try {
                 input.setInputStream(is);
-                input.startPaint(board);
-            while (true) {
+                while (true) {
                     is.reset();
                     int bytesRead = ois.read(buffer);
                     input.setInputStream(is);
+                    oos.writeUTF(clientCommand);
+                    oos.flush();
+                    newBi = ImageIO.read(is);
+                    board.setCapture(newBi);
+                    if (newBi!=null)
+                        board.repaint();
                 }
             }
             catch (IOException e) {
@@ -37,8 +46,7 @@ public class Client {
             }
         }).start();
 
-
-
+        //input.startPaint(board);
 
     }
 
