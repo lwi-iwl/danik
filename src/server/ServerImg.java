@@ -10,10 +10,10 @@ import java.net.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Server {
+public class ServerImg {
 
     private final Capture capture = new Capture();
-    public Server() throws AWTException {
+    public ServerImg() throws AWTException {
 
     }
     String entry;
@@ -24,12 +24,13 @@ public class Server {
                 ServerSocket server= new ServerSocket(3345);
                 Socket client = server.accept();
                 System.out.print("Connection accepted.");
-                BufferedOutputStream out = new BufferedOutputStream(client.getOutputStream());
+                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(client.getOutputStream());
                 System.out.println("DataOutputStream  created");
-                DataInputStream in = new DataInputStream(client.getInputStream());
+                DataInputStream dataInputStream = new DataInputStream(client.getInputStream());
                 System.out.println("DataInputStream created");
+                DataOutputStream dataOutputStream = new DataOutputStream(client.getOutputStream());
                 System.out.println("Server reading from channel");
-                entry = in.readUTF();
+                entry = dataInputStream.readUTF();
                 capture.newCapture();
 
                 byte[] bytes;
@@ -37,12 +38,13 @@ public class Server {
                 ImageIO.write(capture.getCapture(), "jpeg", baos);
                 bytes = baos.toByteArray();
                 while (true) {
-                    out.write(bytes);
+                    dataOutputStream.writeInt(bytes.length);
+                    bufferedOutputStream.write(bytes);
                     System.out.println("Server"+bytes.length);
-                    out.flush();
+                    bufferedOutputStream.flush();
                     if (capture.getBaos()!=null)
                         bytes = capture.getBaos();
-                    entry = in.readUTF();
+                    entry = dataInputStream.readUTF();
                 }
             } catch (IOException | NullPointerException e) {
                 System.out.println(e.getMessage());

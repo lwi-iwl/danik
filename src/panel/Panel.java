@@ -1,8 +1,10 @@
 package panel;
 
-import client.Client;
+import client.ClientImg;
 import client.Board;
-import server.Server;
+import client.ClientManagement;
+import server.ServerImg;
+import server.ServerManagement;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,8 +16,12 @@ public class Panel {
     public Panel() throws AWTException {
         Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
         Board board = new Board();
-        Client client = new Client();
-        Server server = new Server();
+
+        ClientManagement clientManagement = new ClientManagement();
+        ServerManagement serverManagement = new ServerManagement();
+
+        ClientImg client = new ClientImg();
+        ServerImg server = new ServerImg();
         panel = new JPanel();
         JButton clientButton = new JButton("Client");
         clientButton.setSize(sSize.width / 12, sSize.height / 40);
@@ -24,6 +30,7 @@ public class Panel {
         clientButton.addActionListener(e -> {
             try {
                 client.startClient(board);
+                clientManagement.startClientManagement(board);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -38,6 +45,7 @@ public class Panel {
         serverButton.addActionListener(e -> {
             try {
                 server.startServer();
+                serverManagement.startServerManagement();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
