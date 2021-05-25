@@ -29,7 +29,7 @@ public class Client {
                 while (true) {
                     is.reset();
                     int bytesRead = ois.read(buffer);
-                    System.out.println(bytesRead);
+                    System.out.println("Client"+bytesRead);
                     oos.writeUTF(clientCommand);
                     oos.flush();
                     newBi = ImageIO.read(is);

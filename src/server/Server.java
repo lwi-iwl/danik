@@ -38,7 +38,7 @@ public class Server {
                 bytes = baos.toByteArray();
                 while (true) {
                     out.write(bytes);
-                    System.out.println(bytes.length);
+                    System.out.println("Server"+bytes.length);
                     out.flush();
                     if (capture.getBaos()!=null)
                         bytes = capture.getBaos();
