@@ -14,7 +14,7 @@ public class Board extends JPanel {
     public Board() throws AWTException {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
-        setPreferredSize(new Dimension((int)Math.round(sSize.width*0.8), (int)Math.round(sSize.height*0.8)));
+        setPreferredSize(new Dimension((int)Math.round(sSize.width*0.9), (int)Math.round(sSize.height*0.9)));
     }
 
     public void setCapture(BufferedImage image){
@@ -29,8 +29,8 @@ public class Board extends JPanel {
     }
 
     public void setMultiplier(BufferedImage image){
-        double x = sSize.width/(double)image.getWidth()*0.8;
-        double y = sSize.height/(double)image.getHeight()*0.8;
+        double x = sSize.width/(double)image.getWidth()*0.9;
+        double y = sSize.height/(double)image.getHeight()*0.9;
         multiplier = (float)Math.min(x, y);
     }
 }

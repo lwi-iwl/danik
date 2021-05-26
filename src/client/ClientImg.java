@@ -29,9 +29,12 @@ public class ClientImg {
         new Thread(() -> {
             try {
                 int quan;
+                int cursor;
                 while (true) {
                     is.reset();
                     quan = dataInputStream.readInt();
+                    cursor = dataInputStream.readInt();
+                    clientManagement.setCursor(cursor, board);
                     System.out.println(quan);
                     int offset = 0;
                     int bytesRead = 0;
@@ -75,7 +78,7 @@ public class ClientImg {
                 DatagramSocket clientSocket = new DatagramSocket();
 
                 InetAddress IPAddress = null;
-                IPAddress = InetAddress.getByName("localhost");
+                IPAddress = InetAddress.getByName("192.168.1.9");
 
                 byte[] sendingDataBuffer = new byte[65024];
                 byte[] receivingDataBuffer = new byte[65024];
@@ -89,14 +92,14 @@ public class ClientImg {
                 while (true) {
                     DatagramPacket receivingPacket = new DatagramPacket(receivingDataBuffer, receivingDataBuffer.length);
                     clientSocket.receive(receivingPacket);
-
+                    clientSocket.send(sendingPacket);
 
                     InputStream is = new ByteArrayInputStream(receivingPacket.getData(), receivingPacket.getOffset(), receivingPacket.getLength());
                     BufferedImage newBi = null;
                     newBi = ImageIO.read(is);
                     board.setCapture(newBi);
                     board.repaint();
-        }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

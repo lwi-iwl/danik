@@ -40,6 +40,7 @@ public class ServerImg {
                 bytes = baos.toByteArray();
                 while (true) {
                     dataOutputStream.writeInt(bytes.length);
+                    System.out.println(Cursor.getDefaultCursor());
                     bufferedOutputStream.write(bytes);
                     System.out.println("Server"+bytes.length);
                     bufferedOutputStream.flush();
@@ -56,7 +57,6 @@ public class ServerImg {
     }
 
 
-
     public void startUDPServer() throws IOException {
         new Thread(() -> {
             try {
@@ -64,7 +64,6 @@ public class ServerImg {
 
                 byte[] receivingDataBuffer = new byte[65024];
                 byte[] sendingDataBuffer = new byte[65024];
-
                 DatagramPacket inputPacket = new DatagramPacket(receivingDataBuffer, receivingDataBuffer.length);
                 System.out.println("Waiting for a client to connect...");
                 serverSocket.receive(inputPacket);
@@ -74,13 +73,13 @@ public class ServerImg {
 
                 InetAddress senderAddress = inputPacket.getAddress();
                 int senderPort = inputPacket.getPort();
+                capture.newCapture();
+                byte[] bytes;
 
-
-
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(capture.getCapture(), "jpeg", baos);
+                bytes = baos.toByteArray();
                 while(true) {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    ImageIO.write(capture.getCapture(), "jpg", baos);
-                    byte[] bytes = baos.toByteArray();
                     byte[] bytes1 = Arrays.copyOfRange(bytes, 0, 65000);
                     System.out.println(bytes.length);
                     DatagramPacket outputPacket = new DatagramPacket(
@@ -88,6 +87,9 @@ public class ServerImg {
                             senderAddress,senderPort
                     );
                     serverSocket.send(outputPacket);
+                    if (capture.getBaos()!=null)
+                        bytes = capture.getBaos();
+                    serverSocket.receive(inputPacket);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -95,4 +97,3 @@ public class ServerImg {
         }).start();
     }
 }
-
