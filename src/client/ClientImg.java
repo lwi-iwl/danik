@@ -13,11 +13,13 @@ public class ClientImg {
     public ClientImg() throws AWTException {
 
     }
+    boolean isSetSize = false;
     BufferedImage newBi;
     byte[] buffer = new byte[280000];
     InputStream is = new ByteArrayInputStream(buffer);
     public void startClient(Board board) throws IOException {
-        Socket socket = new Socket("localhost", 3345);
+        ClientManagement clientManagement = new ClientManagement();
+        Socket socket = new Socket("192.168.1.9", 3345);
         DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
         DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
         BufferedInputStream bufferedInputStream = new BufferedInputStream(socket.getInputStream());
@@ -42,6 +44,13 @@ public class ClientImg {
                     dataOutputStream.flush();
                     newBi = ImageIO.read(is);
                     if (newBi!=null) {
+                        if(!isSetSize)
+                        {
+                            isSetSize = true;
+                            clientManagement.setMultiplier(newBi);
+                            board.setMultiplier(newBi);
+                            clientManagement.startClientManagement(board);
+                        }
                         board.setCapture(newBi);
                         board.repaint();
                     }

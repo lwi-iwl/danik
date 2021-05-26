@@ -1,67 +1,72 @@
 package client;
 
+import server.Capture;
+
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
 public class ClientManagement {
-
-    boolean isEnter = false;
+    private float x = 1;
+    private float y = 1;
+    private boolean isEnter = false;
+    private Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
     public void startClientManagement(Board board) throws IOException {
-        Socket socket = new Socket("localhost", 3346);
+        Socket socket = new Socket("192.168.1.9", 3346);
         DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
         board.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseEntered(MouseEvent e) {
-                try {
-                    dataOutputStream.writeUTF("ENTER");
-                    dataOutputStream.writeInt(e.getX());
-                    dataOutputStream.writeInt(e.getY());
+            public void mousePressed(MouseEvent e) {
                     isEnter = true;
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                try {
-                    dataOutputStream.writeUTF("RELEASE");
-                    dataOutputStream.writeInt(e.getX());
-                    dataOutputStream.writeInt(e.getY());
                     isEnter = false;
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                if (isEnter) {
-                    try {
-                        dataOutputStream.writeUTF("MOVE");
-                        dataOutputStream.writeInt(e.getX());
-                        dataOutputStream.writeInt(e.getY());
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    }
-                }
             }
 
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
                     dataOutputStream.writeUTF("CLICK");
-                    dataOutputStream.writeInt(e.getX());
-                    dataOutputStream.writeInt(e.getY());
+                    dataOutputStream.writeInt(Math.round(e.getX()*x));
+                    dataOutputStream.writeInt(Math.round(e.getY()*y));
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
             }
         });
 
+        board.addMouseMotionListener(new MouseAdapter(){
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                try {
+                    if (isEnter){
+                        dataOutputStream.writeUTF("DRAG");
+                        dataOutputStream.writeInt(Math.round(e.getX()*x));
+                        dataOutputStream.writeInt(Math.round(e.getY()*y));
+                    }
+                    else {
+                        dataOutputStream.writeUTF("MOVE");
+                        dataOutputStream.writeInt(Math.round(e.getX() * x));
+                        dataOutputStream.writeInt(Math.round(e.getY() * y));
+                    }
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+    public void setMultiplier(BufferedImage image){
+        x = (float)image.getWidth()/sSize.width;
+        y = (float)image.getHeight()/sSize.height;
+        System.out.println(x);
     }
 }

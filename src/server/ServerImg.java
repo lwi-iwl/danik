@@ -35,7 +35,7 @@ public class ServerImg {
 
                 byte[] bytes;
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ImageIO.write(capture.getCapture(), "jpeg", baos);
+                ImageIO.write(capture.getCapture(), "bmp", baos);
                 bytes = baos.toByteArray();
                 while (true) {
                     dataOutputStream.writeInt(bytes.length);

@@ -17,7 +17,6 @@ public class Panel {
         Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
         Board board = new Board();
 
-        ClientManagement clientManagement = new ClientManagement();
         ServerManagement serverManagement = new ServerManagement();
 
         ClientImg client = new ClientImg();
@@ -30,7 +29,6 @@ public class Panel {
         clientButton.addActionListener(e -> {
             try {
                 client.startClient(board);
-                clientManagement.startClientManagement(board);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }

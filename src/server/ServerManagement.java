@@ -20,13 +20,16 @@ public class ServerManagement {
                 while (true) {
                     Robot bot = new Robot();
                     String action = dataInputStream.readUTF();
-
-                    if (action.equals("ENTER")) {
+                    System.out.println(action);
+                    if (action.equals("DRAG")) {
                         bot.mouseMove((int) Math.round(dataInputStream.readInt() * 1.25), (int) Math.round(dataInputStream.readInt() * 1.25));
                         bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+                        bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
                     }
-                    if (action.equals("RELEASE")){
+
+                    if (action.equals("CLICK")){
                         bot.mouseMove((int) Math.round(dataInputStream.readInt() * 1.25), (int) Math.round(dataInputStream.readInt() * 1.25));
+                        bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
                         bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
                     }
                     if (action.equals("MOVE")){
