@@ -28,7 +28,7 @@ public class Panel {
         clientButton.setLayout(new BorderLayout());
         clientButton.addActionListener(e -> {
             try {
-                client.startClient(board);
+                client.startUDPClient(board);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -42,8 +42,8 @@ public class Panel {
         panel.add(serverButton);
         serverButton.addActionListener(e -> {
             try {
-                server.startServer();
-                serverManagement.startServerManagement();
+                server.startUDPServer();
+                //serverManagement.startServerManagement();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
