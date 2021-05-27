@@ -13,20 +13,20 @@ public class Capture {
     public Capture() throws AWTException {
 
     }
-
+    Boolean isTrue = true;
     public void newCapture(){
         new Thread(() -> {
-            try {
-            while (true) {
+            while (isTrue) {
+                try {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
                     ImageIO.write(screenShot, "jpeg", baos);
                     bytes = baos.toByteArray();
-                System.out.println("newcapture");
+                    System.out.println("newcapture");
                 }
-            }
-            catch (IOException e) {
-                e.printStackTrace();
+                catch (IOException | NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
         }).start();
     }
@@ -38,5 +38,9 @@ public class Capture {
 
     public byte[] getBaos(){
         return bytes;
+    }
+
+    public void setClose(Boolean isTrue){
+        this.isTrue = isTrue;
     }
 }

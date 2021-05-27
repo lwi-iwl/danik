@@ -11,15 +11,15 @@ import java.net.ConnectException;
 
 public class Panel {
     private final JPanel panel;
-    ClientImg client = new ClientImg();
-    ServerImg server = new ServerImg();
+    private ServerImg server = new ServerImg();
 
     public Panel(Board board) throws AWTException {
+        ClientImg client = new ClientImg();
         Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
         board.setFocusable(true);
         board.requestFocusInWindow();
         NewDialog dialog = new NewDialog(server, board);
-        StartManage startManage = new StartManage(client);
+        StartManage startManage = new StartManage(client, board, server);
         panel = new JPanel();
         panel.setLayout(null);
 
@@ -34,6 +34,7 @@ public class Panel {
         try {
             server.formThread(dialog);
             server.startServer();
+            //server.startUDPServer();
         }
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -67,8 +68,5 @@ public class Panel {
         return server;
     }
 
-    public ClientImg getClient(){
-        return client;
-    }
 
 }

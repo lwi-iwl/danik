@@ -12,11 +12,10 @@ import java.io.IOException;
 
 public class StartManage {
     ClientImg client;
-    public StartManage(ClientImg client){
+    JFrame jf;
+    public StartManage(ClientImg client, Board board, ServerImg server){
         this.client = client;
-    }
-    public void start(Board board, ServerImg server) throws AWTException {
-        JFrame jf = new JFrame("Viewer");
+        jf = new JFrame("Viewer");
         Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
         jf.setSize(Math.round(sSize.width), Math.round(sSize.height));
         jf.add(board);
@@ -24,10 +23,17 @@ public class StartManage {
             public void windowClosing(WindowEvent e){
                 client.setClientCommand("INFSTOP");
                 server.startServer();
+                System.exit(0);
             }
         });
         jf.setDefaultCloseOperation(jf.EXIT_ON_CLOSE);
-        jf.setVisible(true);
         jf.setResizable(false);
+    }
+    public void start() throws AWTException {
+        jf.setVisible(true);
+    }
+
+    public void startManageExit(){
+        jf.setVisible(false);
     }
 }

@@ -14,10 +14,11 @@ public class ClientManagement {
     private float y = 1;
     private boolean isEnter = false;
     private Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private DataOutputStream dataOutputStream;
+    private Socket socket;
     public void startClientManagement(Board board) throws IOException {
-        Socket socket = new Socket("192.168.1.9", 3346);
-        DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-
+        socket = new Socket("192.168.1.9", 3346);
+        dataOutputStream = new DataOutputStream(socket.getOutputStream());
         board.setFocusable(true);
         board.requestFocusInWindow();
         board.addMouseWheelListener(new MouseAdapter() {
@@ -141,8 +142,8 @@ public class ClientManagement {
         System.out.println(x);
     }
 
-    public void setCursor(int cursor, Board board){
-        System.out.println(Cursor.getPredefinedCursor(cursor));
-        board.setCursor(Cursor.getPredefinedCursor(cursor));
+    public void stopClientManagement() throws IOException {
+        socket.close();
+        dataOutputStream.close();
     }
 }

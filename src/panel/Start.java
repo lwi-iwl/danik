@@ -18,14 +18,10 @@ public class Start  extends JFrame{
         jf.setSize((int)Math.round((float)sSize.width/2), (int)Math.round((float)sSize.height/2));
         jf.addWindowListener(new WindowAdapter(){
             public void windowClosing(WindowEvent e){
-                try {
-                    panel.getServer().infStopServ();
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
+                panel.getServer().infStopServ();
+                System.exit(0);
             }
         });
-        jf.setDefaultCloseOperation(jf.EXIT_ON_CLOSE);
         jf.setVisible(true);
         jf.setResizable(false);
     }

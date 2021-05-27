@@ -6,6 +6,9 @@ import server.ServerImg;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
@@ -16,12 +19,13 @@ public class ClientImg {
     public ClientImg() throws AWTException {
 
     }
-    boolean isSetSize = false;
-    BufferedImage newBi;
-    byte[] buffer = new byte[280000];
-    String clientCommand = "REQUEST";
-    InputStream is = new ByteArrayInputStream(buffer);
+    private boolean isSetSize = false;
+    private BufferedImage newBi;
+    private byte[] buffer = new byte[280000];
+    private String clientCommand = "REQUEST";
+    private InputStream is = new ByteArrayInputStream(buffer);
     public void startClient(Board board, ServerImg server, StartManage startManage) throws IOException {
+        isSetSize = false;
         ClientManagement clientManagement = new ClientManagement();
         try{
             clientCommand = "REQUEST";
@@ -37,7 +41,7 @@ public class ClientImg {
                     try {
                         int quan = 0;
                         int cursor;
-                        while (quan!=-1) {
+                        while (quan!=1) {
                             is.reset();
                             quan = dataInputStream.readInt();
                             System.out.println("quan" + quan);
@@ -54,7 +58,7 @@ public class ClientImg {
                             if (newBi != null) {
                                 if (!isSetSize) {
                                     server.infStopServ();
-                                    startManage.start(board, server);
+                                    startManage.start();
                                     isSetSize = true;
                                     clientManagement.setMultiplier(newBi);
                                     board.setMultiplier(newBi);
@@ -65,12 +69,31 @@ public class ClientImg {
                             } else
                                 System.out.println(0);
                         }
-                        socket.close();
-                        dataInputStream.close();
-                        dataOutputStream.close();
-                        bufferedInputStream.close();
+
                     } catch (IOException | AWTException e) {
                         System.out.println(e.getMessage());
+                        startManage.startManageExit();
+                        try {
+                            MouseListener[] mouseListeners = board.getMouseListeners();
+                            for (MouseListener mouseListener : mouseListeners) {
+                                board.removeMouseListener(mouseListener);
+                            }
+                            MouseMotionListener[] mouseMotionListeners = board.getMouseMotionListeners();
+                            for (MouseMotionListener mouseMotionListener : mouseMotionListeners) {
+                                board.removeMouseMotionListener(mouseMotionListener);
+                            }
+                            MouseWheelListener[] mouseWheelListeners = board.getMouseWheelListeners();
+                            for (MouseWheelListener mouseWheelListener : mouseWheelListeners) {
+                                board.removeMouseWheelListener(mouseWheelListener);
+                            }
+                            dataInputStream.close();
+                            dataOutputStream.close();
+                            bufferedInputStream.close();
+                            clientManagement.stopClientManagement();
+                            System.out.println("EXITT");
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        }
                     }
                 }).start();
             }
@@ -126,6 +149,7 @@ public class ClientImg {
     }
 
     public void setClientCommand(String clientCommand){
+        System.out.println("EXIT");
         this.clientCommand = clientCommand;
     }
 }

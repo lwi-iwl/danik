@@ -13,15 +13,16 @@ import java.util.Arrays;
 public class ServerImg {
 
     private final Capture capture = new Capture();
-    BufferedOutputStream bufferedOutputStream = null;
-    DataInputStream dataInputStream = null;
-    DataOutputStream dataOutputStream = null;
-    Socket client;
+    private BufferedOutputStream bufferedOutputStream = null;
+    private DataInputStream dataInputStream = null;
+    private DataOutputStream dataOutputStream = null;
+    private Socket client;
     public ServerImg() throws AWTException {
 
     }
-    String entry = "STOP";
-    Thread threadServer;
+    private String entry = "STOP";
+    private String command = "";
+    private Thread threadServer;
 
     public void formThread(NewDialog dialog) throws Exception{
         threadServer = new Thread(() -> {
@@ -67,7 +68,7 @@ public class ServerImg {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     ImageIO.write(capture.getCapture(), "jpeg", baos);
                     bytes = baos.toByteArray();
-                    while (!entry.equals("INFSTOP")) {
+                    while ((!entry.equals("INFSTOP")) && (!command.equals("EXIT"))) {
                         dataOutputStream.writeInt(bytes.length);
                         bufferedOutputStream.write(bytes);
                         System.out.println("Server" + bytes.length);
@@ -76,8 +77,19 @@ public class ServerImg {
                             bytes = capture.getBaos();
                         entry = dataInputStream.readUTF();
                     }
-                    if (entry.equals("INFSTOP")){
-                        dataOutputStream.writeInt(-1);
+                    if (command.equals("EXIT")){
+                        serverManagement.setClose(false);
+                        System.out.println("EXIT");
+                        capture.setClose(false);
+                        if (bufferedOutputStream!=null){
+                            bufferedOutputStream.close();
+                            dataInputStream.close();
+                            dataOutputStream.close();
+                            client.close();
+                        }
+                    }
+                    else if(entry.equals("INFSTOP")){
+
                     }
                 }
                 else{
@@ -99,7 +111,8 @@ public class ServerImg {
                     e.printStackTrace();
                 }
             }
-                threadServer.start();
+            System.out.println("START");
+            threadServer.start();
         }).start();
     }
 
@@ -107,12 +120,12 @@ public class ServerImg {
         entry = "STOP";
     }
 
-    public void infStopServ() throws IOException {
+    public void infStopServ() {
         entry = "INFSTOP";
-        bufferedOutputStream.close();
-        dataInputStream.close();
-        dataOutputStream.close();
-        client.close();
+    }
+
+    public  void infExitServ() throws IOException {
+        command = "EXIT";
     }
 
     public void startServ(){
