@@ -19,11 +19,11 @@ public class ClientImg {
     InputStream is = new ByteArrayInputStream(buffer);
     public void startClient(Board board) throws IOException {
         ClientManagement clientManagement = new ClientManagement();
-        Socket socket = new Socket("192.168.1.9", 3345);
+        Socket socket = new Socket("localhost", 3345);
         DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
         DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
         BufferedInputStream bufferedInputStream = new BufferedInputStream(socket.getInputStream());
-        String clientCommand = "sd";
+        String clientCommand = "REQUEST";
         dataOutputStream.writeUTF(clientCommand);
         dataOutputStream.flush();
         new Thread(() -> {
@@ -33,9 +33,9 @@ public class ClientImg {
                 while (true) {
                     is.reset();
                     quan = dataInputStream.readInt();
-                    cursor = dataInputStream.readInt();
-                    clientManagement.setCursor(cursor, board);
-                    System.out.println(quan);
+                    //cursor = dataInputStream.readInt();
+                    //clientManagement.setCursor(cursor, board);
+                    System.out.println("quan"+ quan);
                     int offset = 0;
                     int bytesRead = 0;
                     while (offset < quan) {

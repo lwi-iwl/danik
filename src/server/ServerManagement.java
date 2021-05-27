@@ -17,8 +17,9 @@ public class ServerManagement {
                 ServerSocket server= new ServerSocket(3346);
                 Socket client = server.accept();
                 DataInputStream dataInputStream = new DataInputStream(client.getInputStream());
-                while (true) {
-                    Robot bot = new Robot();
+                Robot bot = new Robot();
+                /*while (true) {
+
                     String action = dataInputStream.readUTF();
                     System.out.println(action);
                     if (action.equals("DRAG")) {
@@ -55,11 +56,12 @@ public class ServerManagement {
                     else if (action.equals("KEYRELEASE")){
                         bot.keyRelease(dataInputStream.readInt());
                     }
-                }
+                }*/
             }
-            catch (IOException | AWTException | IllegalArgumentException e) {
+            catch (IOException | IllegalArgumentException | AWTException e) {
                 e.printStackTrace();
             }
         }).start();
     }
+
 }

@@ -1,15 +1,14 @@
 package server;
 
 
-import client.Board;
+import panel.NewDialog;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
 import java.util.Arrays;
-import java.util.Timer;
-import java.util.TimerTask;
+
 
 public class ServerImg {
 
@@ -17,45 +16,84 @@ public class ServerImg {
     public ServerImg() throws AWTException {
 
     }
-    String entry;
+    String entry = "STOP";
+    Thread threadServer;
 
-    public void startServer() throws IOException{
-        new Thread(() -> {
+    public void startServer(NewDialog dialog) throws Exception{
+        threadServer = new Thread(() -> {
+            entry = "STOP";
             try {
                 ServerSocket server= new ServerSocket(3345);
-                Socket client = server.accept();
-                System.out.print("Connection accepted.");
-                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(client.getOutputStream());
-                System.out.println("DataOutputStream  created");
-                DataInputStream dataInputStream = new DataInputStream(client.getInputStream());
-                System.out.println("DataInputStream created");
-                DataOutputStream dataOutputStream = new DataOutputStream(client.getOutputStream());
-                System.out.println("Server reading from channel");
-                entry = dataInputStream.readUTF();
-                capture.newCapture();
-
-                byte[] bytes;
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ImageIO.write(capture.getCapture(), "jpeg", baos);
-                bytes = baos.toByteArray();
-                while (true) {
-                    dataOutputStream.writeInt(bytes.length);
-                    System.out.println(Cursor.getDefaultCursor());
-                    bufferedOutputStream.write(bytes);
-                    System.out.println("Server"+bytes.length);
-                    bufferedOutputStream.flush();
-                    if (capture.getBaos()!=null)
-                        bytes = capture.getBaos();
-                    entry = dataInputStream.readUTF();
+                server.setSoTimeout(1000);
+                BufferedOutputStream bufferedOutputStream = null;
+                DataInputStream dataInputStream = null;
+                DataOutputStream dataOutputStream = null;
+                while (!entry.equals("START") && !entry.equals("INFSTOP")) {
+                    while (entry.equals("STOP")) {
+                        try {
+                            System.out.println("TRY");
+                            Socket client = server.accept();
+                            System.out.print("Connection accepted.");
+                            bufferedOutputStream = new BufferedOutputStream(client.getOutputStream());
+                            System.out.println("DataOutputStream  created");
+                            dataInputStream = new DataInputStream(client.getInputStream());
+                            System.out.println("DataInputStream created");
+                            dataOutputStream = new DataOutputStream(client.getOutputStream());
+                            System.out.println("Server reading from channel");
+                            entry = dataInputStream.readUTF();
+                        } catch (InterruptedIOException e) {
+                            e.getMessage();
+                        }
+                    }
+                    if (entry.equals("REQUEST")) {
+                        dialog.setVisible();
+                    }
+                    while ((!entry.equals("START")) && (!entry.equals("STOP"))) {
+                        Thread.sleep(100);
+                    }
                 }
-            } catch (IOException | NullPointerException e) {
+                if (!entry.equals("INFSTOP")) {
+                    System.out.println("START");
+                    ServerManagement serverManagement = new ServerManagement();
+                    serverManagement.startServerManagement();
+                    capture.newCapture();
+
+                    byte[] bytes;
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    ImageIO.write(capture.getCapture(), "jpeg", baos);
+                    bytes = baos.toByteArray();
+                    while (!entry.equals("INFSTOP")) {
+                        dataOutputStream.writeInt(bytes.length);
+                        bufferedOutputStream.write(bytes);
+                        System.out.println("Server" + bytes.length);
+                        bufferedOutputStream.flush();
+                        if (capture.getBaos() != null)
+                            bytes = capture.getBaos();
+                        entry = dataInputStream.readUTF();
+                    }
+                }
+                else{
+                    System.out.println("INFSTOP");
+                }
+            } catch (IOException | NullPointerException | InterruptedException e) {
                 System.out.println(e.getMessage());
             }
-        }).start();
-
-
+        });
+        threadServer.start();
     }
 
+
+    public void stopServ(){
+        entry = "STOP";
+    }
+
+    public void infStopServ(){
+        entry = "INFSTOP";
+    }
+
+    public void startServ(){
+        entry = "START";
+    }
 
     public void startUDPServer() throws IOException {
         new Thread(() -> {

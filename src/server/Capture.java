@@ -22,7 +22,7 @@ public class Capture {
                     screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
                     ImageIO.write(screenShot, "jpeg", baos);
                     bytes = baos.toByteArray();
-                System.out.println("sd");
+                System.out.println("newcapture");
                 }
             }
             catch (IOException e) {
