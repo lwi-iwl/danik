@@ -91,7 +91,16 @@ public class ServerImg {
     }
 
     public void startServer(){
-        threadServer.start();
+        new Thread(() -> {
+            while (threadServer.getState() == Thread.State.RUNNABLE) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+                threadServer.start();
+        }).start();
     }
 
     public void stopServ(){

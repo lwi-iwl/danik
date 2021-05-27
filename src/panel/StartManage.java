@@ -22,8 +22,8 @@ public class StartManage {
         jf.add(board);
         jf.addWindowListener(new WindowAdapter(){
             public void windowClosing(WindowEvent e){
-                    server.startServer();
-                    client.setClientCommand("INFSTOP");
+                client.setClientCommand("INFSTOP");
+                server.startServer();
             }
         });
         jf.setDefaultCloseOperation(jf.EXIT_ON_CLOSE);
