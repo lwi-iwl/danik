@@ -12,17 +12,15 @@ import java.net.SocketException;
 public class ServerManagement {
 
     private Boolean isTrue = true;
-    private DataInputStream dataInputStream;
-    private Socket client;
-    ServerSocket server;
     public void startServerManagement() throws IOException {
         new Thread(() -> {
             try {
                 String action = "";
-                server = new ServerSocket(3346);
-                client = server.accept();
-                dataInputStream = new DataInputStream(client.getInputStream());
+                ServerSocket server = new ServerSocket(3346);
+                Socket client = server.accept();
+                DataInputStream dataInputStream = new DataInputStream(client.getInputStream());
                 Robot bot = new Robot();
+                int keyInt;
                 while (isTrue) {
                     try {
                         action = dataInputStream.readUTF();
@@ -56,10 +54,13 @@ public class ServerManagement {
                             bot.mouseWheel(dataInputStream.readInt());
                         }
                         else if (action.equals("KEYPRESS")){
-                            bot.keyPress(dataInputStream.readInt());
+                            keyInt = dataInputStream.readInt();
+                            System.out.println(keyInt);
+                            bot.keyPress(keyInt);
                         }
                         else if (action.equals("KEYRELEASE")){
-                            bot.keyRelease(dataInputStream.readInt());
+                            keyInt = dataInputStream.readInt();
+                            bot.keyRelease(keyInt);
                         }
                     }
                     catch (SocketException e){
@@ -73,11 +74,4 @@ public class ServerManagement {
         }).start();
     }
 
-    public void setClose(Boolean isTrue) throws IOException {
-        this.isTrue = isTrue;
-        dataInputStream.close();
-        client.close();
-        server.close();
-        System.out.println("close");
-    }
 }

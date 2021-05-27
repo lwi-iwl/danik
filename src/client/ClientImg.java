@@ -1,6 +1,7 @@
 package client;
 
 
+import panel.NewDialog;
 import panel.StartManage;
 import server.ServerImg;
 
@@ -20,11 +21,8 @@ public class ClientImg {
 
     }
     private boolean isSetSize = false;
-    private BufferedImage newBi;
-    private byte[] buffer = new byte[280000];
     private String clientCommand = "REQUEST";
-    private InputStream is = new ByteArrayInputStream(buffer);
-    public void startClient(Board board, ServerImg server, StartManage startManage) throws IOException {
+    public void startClient(Board board, ServerImg server, StartManage startManage, NewDialog dialog) throws IOException {
         isSetSize = false;
         ClientManagement clientManagement = new ClientManagement();
         try{
@@ -38,6 +36,9 @@ public class ClientImg {
             String serverCommand = dataInputStream.readUTF();
             if (!serverCommand.equals("STOP")) {
                 new Thread(() -> {
+                    byte[] buffer = new byte[280000];
+                    BufferedImage newBi;
+                    InputStream is = new ByteArrayInputStream(buffer);
                     try {
                         int quan = 0;
                         int cursor;
@@ -58,6 +59,7 @@ public class ClientImg {
                             if (newBi != null) {
                                 if (!isSetSize) {
                                     server.infStopServ();
+                                    server.getSocket().close();
                                     startManage.start();
                                     isSetSize = true;
                                     clientManagement.setMultiplier(newBi);
@@ -89,9 +91,8 @@ public class ClientImg {
                             dataInputStream.close();
                             dataOutputStream.close();
                             bufferedInputStream.close();
-                            clientManagement.stopClientManagement();
-                            System.out.println("EXITT");
-                        } catch (IOException ioException) {
+                            server.startServer(dialog);
+                        } catch (Exception ioException) {
                             ioException.printStackTrace();
                         }
                     }
@@ -110,43 +111,6 @@ public class ClientImg {
         }
     }
 
-
-
-
-
-    public void startUDPClient(Board board) throws IOException {
-        new Thread(() -> {
-            try {
-                DatagramSocket clientSocket = new DatagramSocket();
-
-                InetAddress IPAddress = null;
-                IPAddress = InetAddress.getByName("192.168.1.9");
-
-                byte[] sendingDataBuffer = new byte[65024];
-                byte[] receivingDataBuffer = new byte[65024];
-
-                String sentence = "Hello from UDP client";
-                sendingDataBuffer = sentence.getBytes();
-
-                DatagramPacket sendingPacket = new DatagramPacket(sendingDataBuffer, sendingDataBuffer.length, IPAddress, 50001);
-                clientSocket.send(sendingPacket);
-
-                while (true) {
-                    DatagramPacket receivingPacket = new DatagramPacket(receivingDataBuffer, receivingDataBuffer.length);
-                    clientSocket.receive(receivingPacket);
-                    clientSocket.send(sendingPacket);
-
-                    InputStream is = new ByteArrayInputStream(receivingPacket.getData(), receivingPacket.getOffset(), receivingPacket.getLength());
-                    BufferedImage newBi = null;
-                    newBi = ImageIO.read(is);
-                    board.setCapture(newBi);
-                    board.repaint();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-    }
 
     public void setClientCommand(String clientCommand){
         System.out.println("EXIT");

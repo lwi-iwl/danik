@@ -2,6 +2,7 @@ package client;
 
 import server.Capture;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -12,13 +13,10 @@ import java.net.Socket;
 public class ClientManagement {
     private float x = 1;
     private float y = 1;
-    private boolean isEnter = false;
     private Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private DataOutputStream dataOutputStream;
-    private Socket socket;
     public void startClientManagement(Board board) throws IOException {
-        socket = new Socket("192.168.1.9", 3346);
-        dataOutputStream = new DataOutputStream(socket.getOutputStream());
+        Socket socket = new Socket("192.168.1.9", 3346);
+        DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
         board.setFocusable(true);
         board.requestFocusInWindow();
         board.addMouseWheelListener(new MouseAdapter() {
@@ -27,8 +25,8 @@ public class ClientManagement {
                 try {
 
                     int notches = e.getWheelRotation();
-                        dataOutputStream.writeUTF("WHEEL");
-                        dataOutputStream.writeInt(notches);
+                    dataOutputStream.writeUTF("WHEEL");
+                    dataOutputStream.writeInt(notches);
                 }
                 catch (IOException ioException) {
                     ioException.printStackTrace();
@@ -39,7 +37,6 @@ public class ClientManagement {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                    isEnter = true;
                 try {
                     if ((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
                         dataOutputStream.writeUTF("PRESSR");
@@ -59,7 +56,6 @@ public class ClientManagement {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                    isEnter = false;
                 try {
                     if ((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
                         dataOutputStream.writeUTF("RELEASER");
@@ -83,9 +79,9 @@ public class ClientManagement {
             @Override
             public void mouseMoved(MouseEvent e) {
                 try {
-                        dataOutputStream.writeUTF("MOVE");
-                        dataOutputStream.writeInt(Math.round(e.getX() * x));
-                        dataOutputStream.writeInt(Math.round(e.getY() * y));
+                    dataOutputStream.writeUTF("MOVE");
+                    dataOutputStream.writeInt(Math.round(e.getX() * x));
+                    dataOutputStream.writeInt(Math.round(e.getY() * y));
 
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
@@ -96,10 +92,10 @@ public class ClientManagement {
             @Override
             public void mouseDragged(MouseEvent e) {
                 try {
-                        System.out.println("MOVE");
-                        dataOutputStream.writeUTF("MOVE");
-                        dataOutputStream.writeInt(Math.round(e.getX()*x));
-                        dataOutputStream.writeInt(Math.round(e.getY()*y));
+                    System.out.println("MOVE");
+                    dataOutputStream.writeUTF("MOVE");
+                    dataOutputStream.writeInt(Math.round(e.getX()*x));
+                    dataOutputStream.writeInt(Math.round(e.getY()*y));
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -118,7 +114,14 @@ public class ClientManagement {
             public void keyPressed(KeyEvent e) {
                 try {
                     dataOutputStream.writeUTF("KEYPRESS");
-                    dataOutputStream.writeInt(e.getKeyCode());
+                    if (e.getKeyCode() != 0) {
+                        System.out.println();
+                        System.out.println(e.getKeyCode());
+                        dataOutputStream.writeInt(e.getKeyCode());
+                    }
+                    else {
+                        dataOutputStream.writeInt(KeyEvent.VK_PERIOD);
+                    }
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -128,7 +131,10 @@ public class ClientManagement {
             public void keyReleased(KeyEvent e) {
                 try {
                     dataOutputStream.writeUTF("KEYRELEASE");
-                    dataOutputStream.writeInt(e.getKeyCode());
+                    if (e.getKeyCode() != 0)
+                        dataOutputStream.writeInt(e.getKeyCode());
+                    else
+                        dataOutputStream.writeInt(KeyEvent.VK_PERIOD);
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -142,8 +148,4 @@ public class ClientManagement {
         System.out.println(x);
     }
 
-    public void stopClientManagement() throws IOException {
-        socket.close();
-        dataOutputStream.close();
-    }
 }

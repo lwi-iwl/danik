@@ -19,7 +19,7 @@ public class Panel {
         board.setFocusable(true);
         board.requestFocusInWindow();
         NewDialog dialog = new NewDialog(server, board);
-        StartManage startManage = new StartManage(client, board, server);
+        StartManage startManage = new StartManage(client, board, server, dialog);
         panel = new JPanel();
         panel.setLayout(null);
 
@@ -32,8 +32,7 @@ public class Panel {
         panel.add(ipText);
 
         try {
-            server.formThread(dialog);
-            server.startServer();
+            server.startServer(dialog);
             //server.startUDPServer();
         }
         catch (Exception e){
@@ -48,7 +47,7 @@ public class Panel {
         clientButton.setLayout(null);
         clientButton.addActionListener(e -> {
             try {
-                client.startClient(board, server, startManage);
+                client.startClient(board, server, startManage, dialog);
                 //client.startUDPClient(board);
             } catch (IOException ioException) {
                 ioException.printStackTrace();

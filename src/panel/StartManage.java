@@ -13,7 +13,7 @@ import java.io.IOException;
 public class StartManage {
     ClientImg client;
     JFrame jf;
-    public StartManage(ClientImg client, Board board, ServerImg server){
+    public StartManage(ClientImg client, Board board, ServerImg server, NewDialog dialog){
         this.client = client;
         jf = new JFrame("Viewer");
         Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -22,11 +22,14 @@ public class StartManage {
         jf.addWindowListener(new WindowAdapter(){
             public void windowClosing(WindowEvent e){
                 client.setClientCommand("INFSTOP");
-                server.startServer();
-                System.exit(0);
+                try {
+                    server.startServer(dialog);
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                jf.dispose();
             }
         });
-        jf.setDefaultCloseOperation(jf.EXIT_ON_CLOSE);
         jf.setResizable(false);
     }
     public void start() throws AWTException {
@@ -36,4 +39,5 @@ public class StartManage {
     public void startManageExit(){
         jf.setVisible(false);
     }
+
 }
