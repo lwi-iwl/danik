@@ -13,26 +13,27 @@ import java.util.Arrays;
 public class ServerImg {
 
     private final Capture capture = new Capture();
+    BufferedOutputStream bufferedOutputStream = null;
+    DataInputStream dataInputStream = null;
+    DataOutputStream dataOutputStream = null;
+    Socket client;
     public ServerImg() throws AWTException {
 
     }
     String entry = "STOP";
     Thread threadServer;
 
-    public void startServer(NewDialog dialog) throws Exception{
+    public void formThread(NewDialog dialog) throws Exception{
         threadServer = new Thread(() -> {
             entry = "STOP";
             try {
                 ServerSocket server= new ServerSocket(3345);
                 server.setSoTimeout(1000);
-                BufferedOutputStream bufferedOutputStream = null;
-                DataInputStream dataInputStream = null;
-                DataOutputStream dataOutputStream = null;
                 while (!entry.equals("START") && !entry.equals("INFSTOP")) {
                     while (entry.equals("STOP")) {
                         try {
                             System.out.println("TRY");
-                            Socket client = server.accept();
+                            client = server.accept();
                             System.out.print("Connection accepted.");
                             bufferedOutputStream = new BufferedOutputStream(client.getOutputStream());
                             System.out.println("DataOutputStream  created");
@@ -51,9 +52,13 @@ public class ServerImg {
                     while ((!entry.equals("START")) && (!entry.equals("STOP"))) {
                         Thread.sleep(100);
                     }
+                    if(entry.equals("STOP"))
+                        dataOutputStream.writeUTF("STOP");
                 }
                 if (!entry.equals("INFSTOP")) {
+                    dataOutputStream.writeUTF("START");
                     System.out.println("START");
+
                     ServerManagement serverManagement = new ServerManagement();
                     serverManagement.startServerManagement();
                     capture.newCapture();
@@ -71,24 +76,34 @@ public class ServerImg {
                             bytes = capture.getBaos();
                         entry = dataInputStream.readUTF();
                     }
+                    if (entry.equals("INFSTOP")){
+                        dataOutputStream.writeInt(-1);
+                    }
                 }
                 else{
                     System.out.println("INFSTOP");
+                    dataOutputStream.writeUTF("STOP");
                 }
             } catch (IOException | NullPointerException | InterruptedException e) {
                 System.out.println(e.getMessage());
             }
         });
-        threadServer.start();
     }
 
+    public void startServer(){
+        threadServer.start();
+    }
 
     public void stopServ(){
         entry = "STOP";
     }
 
-    public void infStopServ(){
+    public void infStopServ() throws IOException {
         entry = "INFSTOP";
+        bufferedOutputStream.close();
+        dataInputStream.close();
+        dataOutputStream.close();
+        client.close();
     }
 
     public void startServ(){

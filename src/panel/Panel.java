@@ -7,17 +7,19 @@ import server.ServerImg;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.net.ConnectException;
 
 public class Panel {
     private final JPanel panel;
+    ClientImg client = new ClientImg();
+    ServerImg server = new ServerImg();
+
     public Panel(Board board) throws AWTException {
         Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
         board.setFocusable(true);
         board.requestFocusInWindow();
-        ClientImg client = new ClientImg();
-        ServerImg server = new ServerImg();
         NewDialog dialog = new NewDialog(server, board);
-
+        StartManage startManage = new StartManage(client);
         panel = new JPanel();
         panel.setLayout(null);
 
@@ -30,7 +32,8 @@ public class Panel {
         panel.add(ipText);
 
         try {
-            server.startServer(dialog);
+            server.formThread(dialog);
+            server.startServer();
         }
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -44,8 +47,7 @@ public class Panel {
         clientButton.setLayout(null);
         clientButton.addActionListener(e -> {
             try {
-                client.startClient(board);
-                server.infStopServ();
+                client.startClient(board, server, startManage);
                 //client.startUDPClient(board);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
@@ -59,6 +61,14 @@ public class Panel {
 
     public JPanel getPanel(){
         return panel;
+    }
+
+    public ServerImg getServer(){
+        return server;
+    }
+
+    public ClientImg getClient(){
+        return client;
     }
 
 }

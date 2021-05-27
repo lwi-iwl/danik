@@ -1,6 +1,5 @@
 package server;
 
-import client.Board;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -18,7 +17,7 @@ public class ServerManagement {
                 Socket client = server.accept();
                 DataInputStream dataInputStream = new DataInputStream(client.getInputStream());
                 Robot bot = new Robot();
-                /*while (true) {
+                while (true) {
 
                     String action = dataInputStream.readUTF();
                     System.out.println(action);
@@ -56,7 +55,7 @@ public class ServerManagement {
                     else if (action.equals("KEYRELEASE")){
                         bot.keyRelease(dataInputStream.readInt());
                     }
-                }*/
+                }
             }
             catch (IOException | IllegalArgumentException | AWTException e) {
                 e.printStackTrace();

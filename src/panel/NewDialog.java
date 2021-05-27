@@ -17,17 +17,12 @@ public class NewDialog {
     public NewDialog(ServerImg server, Board board) {
         JFrame f = new JFrame();
         d = new JDialog(f, "Запрос на управление", true);
+        d.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Already there
         d.setLayout(new FlowLayout());
         JButton yes = new JButton("Да");
         yes.addActionListener(e -> {
             server.startServ();
             d.setVisible(false);
-            StartManage startManage = new StartManage();
-            try {
-                startManage.start(board);
-            } catch (AWTException awtException) {
-                awtException.printStackTrace();
-            }
         });
 
         JButton no = new JButton("Нет");

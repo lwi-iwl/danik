@@ -2,6 +2,9 @@ package panel;
 import client.Board;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 
 public class Start  extends JFrame{
@@ -13,6 +16,15 @@ public class Start  extends JFrame{
         jf.add(panel.getPanel());
         Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
         jf.setSize((int)Math.round((float)sSize.width/2), (int)Math.round((float)sSize.height/2));
+        jf.addWindowListener(new WindowAdapter(){
+            public void windowClosing(WindowEvent e){
+                try {
+                    panel.getServer().infStopServ();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
         jf.setDefaultCloseOperation(jf.EXIT_ON_CLOSE);
         jf.setVisible(true);
         jf.setResizable(false);
