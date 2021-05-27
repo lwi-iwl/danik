@@ -22,11 +22,6 @@ public class StartManage {
         jf.addWindowListener(new WindowAdapter(){
             public void windowClosing(WindowEvent e){
                 client.setClientCommand("INFSTOP");
-                try {
-                    server.startServer(dialog);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
                 jf.dispose();
             }
         });

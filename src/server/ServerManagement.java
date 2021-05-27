@@ -12,11 +12,13 @@ import java.net.SocketException;
 public class ServerManagement {
 
     private Boolean isTrue = true;
+    ServerSocket server;
     public void startServerManagement() throws IOException {
         new Thread(() -> {
             try {
+                isTrue = true;
                 String action = "";
-                ServerSocket server = new ServerSocket(3346);
+                server = new ServerSocket(3346);
                 Socket client = server.accept();
                 DataInputStream dataInputStream = new DataInputStream(client.getInputStream());
                 Robot bot = new Robot();
@@ -65,8 +67,11 @@ public class ServerManagement {
                     }
                     catch (SocketException e){
                         e.getMessage();
+                        server.close();
                     }
                 }
+                server.close();
+                System.out.println("managementClose");
             }
             catch (IOException | IllegalArgumentException | AWTException e) {
                 e.printStackTrace();
@@ -74,4 +79,7 @@ public class ServerManagement {
         }).start();
     }
 
+    public ServerSocket getServerManagementSocket(){
+        return server;
+    }
 }

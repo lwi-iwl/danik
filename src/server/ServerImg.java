@@ -7,19 +7,19 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
-import java.util.Arrays;
 
 
 public class ServerImg {
 
-    public ServerImg() throws AWTException {
+    public ServerImg() {
 
     }
     private String entry = "STOP";
     ServerSocket server;
-    public void startServer(NewDialog dialog) throws Exception{
+    public void startServer(NewDialog dialog){
         new Thread(() -> {
             entry = "STOP";
+            ServerManagement serverManagement = new ServerManagement();
             try {
                 server = new ServerSocket(3345);
                 server.setSoTimeout(1000);
@@ -58,7 +58,6 @@ public class ServerImg {
                     dataOutputStream.writeUTF("START");
                     System.out.println("START");
 
-                    ServerManagement serverManagement = new ServerManagement();
                     serverManagement.startServerManagement();
                     capture.newCapture();
 
@@ -76,12 +75,19 @@ public class ServerImg {
                         entry = dataInputStream.readUTF();
                     }
 
-                        capture.setClose(false);
-                        if (bufferedOutputStream!=null){
-                            bufferedOutputStream.close();
-                            dataInputStream.close();
-                            dataOutputStream.close();
-                            client.close();
+                    capture.setClose(false);
+                    if (bufferedOutputStream!=null){
+                        bufferedOutputStream.close();
+                        dataInputStream.close();
+                        dataOutputStream.close();
+                        client.close();
+                    }
+                    try {
+                        server.close();
+                        serverManagement.getServerManagementSocket().close();
+                        startServer(dialog);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
                 else{

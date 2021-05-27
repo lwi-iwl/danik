@@ -7,7 +7,6 @@ import server.ServerImg;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.net.ConnectException;
 
 public class Panel {
     private final JPanel panel;
@@ -33,7 +32,6 @@ public class Panel {
 
         try {
             server.startServer(dialog);
-            //server.startUDPServer();
         }
         catch (Exception e){
             System.out.println(e.getMessage());
@@ -48,7 +46,6 @@ public class Panel {
         clientButton.addActionListener(e -> {
             try {
                 client.startClient(board, server, startManage, dialog);
-                //client.startUDPClient(board);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }

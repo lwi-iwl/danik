@@ -40,9 +40,8 @@ public class ClientImg {
                     BufferedImage newBi;
                     InputStream is = new ByteArrayInputStream(buffer);
                     try {
-                        int quan = 0;
-                        int cursor;
-                        while (quan!=1) {
+                        int quan;
+                        while (true) {
                             is.reset();
                             quan = dataInputStream.readInt();
                             System.out.println("quan" + quan);
