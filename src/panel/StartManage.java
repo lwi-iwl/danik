@@ -13,7 +13,7 @@ import java.io.IOException;
 public class StartManage {
     ClientImg client;
     JFrame jf;
-    public StartManage(ClientImg client, Board board, ServerImg server, NewDialog dialog){
+    public StartManage(ClientImg client, Board board){
         this.client = client;
         jf = new JFrame("Viewer");
         Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();

@@ -15,7 +15,7 @@ public class ClientManagement {
     private float y = 1;
     private Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
     public void startClientManagement(Board board) throws IOException {
-        Socket socket = new Socket("192.168.1.9", 3346);
+        Socket socket = new Socket("192.168.43.69", 3346);
         DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
         board.setFocusable(true);
         board.requestFocusInWindow();

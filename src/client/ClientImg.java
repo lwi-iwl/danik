@@ -6,6 +6,7 @@ import panel.StartManage;
 import server.ServerImg;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -17,17 +18,20 @@ import java.net.*;
 public class ClientImg {
 
 
-    public ClientImg() throws AWTException {
+    public ClientImg() {
 
     }
     private boolean isSetSize = false;
     private String clientCommand = "REQUEST";
-    public void startClient(Board board, ServerImg server, StartManage startManage, NewDialog dialog) throws IOException {
+    public void startClient(Board board, ServerImg server, StartManage startManage, NewDialog dialog, String host, JFrame jf) throws IOException {
         isSetSize = false;
         ClientManagement clientManagement = new ClientManagement();
+        new Thread(() -> {
         try{
             clientCommand = "REQUEST";
-            Socket socket = new Socket("192.168.1.9", 3345);
+            Socket socket = new Socket();
+            socket.setSoTimeout(200);
+            socket.connect(new InetSocketAddress("192.168.43.69", 3345), 3000);
             DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
             DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
             BufferedInputStream bufferedInputStream = new BufferedInputStream(socket.getInputStream());
@@ -35,7 +39,6 @@ public class ClientImg {
             dataOutputStream.flush();
             String serverCommand = dataInputStream.readUTF();
             if (!serverCommand.equals("STOP")) {
-                new Thread(() -> {
                     byte[] buffer = new byte[280000];
                     BufferedImage newBi;
                     InputStream is = new ByteArrayInputStream(buffer);
@@ -60,6 +63,7 @@ public class ClientImg {
                                     server.infStopServ();
                                     server.getSocket().close();
                                     startManage.start();
+                                    jf.setVisible(false);
                                     isSetSize = true;
                                     clientManagement.setMultiplier(newBi);
                                     board.setMultiplier(newBi);
@@ -74,6 +78,7 @@ public class ClientImg {
                     } catch (IOException | AWTException e) {
                         System.out.println(e.getMessage());
                         startManage.startManageExit();
+                        jf.setVisible(true);
                         try {
                             MouseListener[] mouseListeners = board.getMouseListeners();
                             for (MouseListener mouseListener : mouseListeners) {
@@ -95,7 +100,6 @@ public class ClientImg {
                             ioException.printStackTrace();
                         }
                     }
-                }).start();
             }
             else
             {
@@ -105,9 +109,10 @@ public class ClientImg {
                 bufferedInputStream.close();
             }
         }
-        catch (ConnectException e){
+        catch (IOException e){
             System.out.println(e.getMessage());
         }
+        }).start();
     }
 
 
