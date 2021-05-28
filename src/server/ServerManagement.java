@@ -28,29 +28,29 @@ public class ServerManagement {
                         action = dataInputStream.readUTF();
                         System.out.println(action);
                         if (action.equals("DRAG")) {
-                            bot.mouseMove((int) Math.round(dataInputStream.readInt() * 1.25), (int) Math.round(dataInputStream.readInt() * 1.25));
+                            bot.mouseMove((int) Math.round(dataInputStream.readInt()  ), (int) Math.round(dataInputStream.readInt()  ));
                             bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
                             bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
                         }
 
                         else if (action.equals("PRESSL")){
-                            bot.mouseMove((int) Math.round(dataInputStream.readInt() * 1.25), (int) Math.round(dataInputStream.readInt() * 1.25));
+                            bot.mouseMove((int) Math.round(dataInputStream.readInt()  ), (int) Math.round(dataInputStream.readInt()  ));
                             bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
                         }
                         else if (action.equals("PRESSR")){
-                            bot.mouseMove((int) Math.round(dataInputStream.readInt() * 1.25), (int) Math.round(dataInputStream.readInt() * 1.25));
+                            bot.mouseMove((int) Math.round(dataInputStream.readInt()  ), (int) Math.round(dataInputStream.readInt()  ));
                             bot.mousePress(InputEvent.BUTTON3_DOWN_MASK);
                         }
                         else if (action.equals("RELEASEL")){
-                            bot.mouseMove((int) Math.round(dataInputStream.readInt() * 1.25), (int) Math.round(dataInputStream.readInt() * 1.25));
+                            bot.mouseMove((int) Math.round(dataInputStream.readInt()  ), (int) Math.round(dataInputStream.readInt()  ));
                             bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
                         }
                         else if (action.equals("RELEASER")){
-                            bot.mouseMove((int) Math.round(dataInputStream.readInt() * 1.25), (int) Math.round(dataInputStream.readInt() * 1.25));
+                            bot.mouseMove((int) Math.round(dataInputStream.readInt()  ), (int) Math.round(dataInputStream.readInt()  ));
                             bot.mouseRelease(InputEvent.BUTTON3_DOWN_MASK);
                         }
                         else if (action.equals("MOVE")){
-                            bot.mouseMove((int) Math.round(dataInputStream.readInt() * 1.25), (int) Math.round(dataInputStream.readInt() * 1.25));
+                            bot.mouseMove((int) Math.round(dataInputStream.readInt()  ), (int) Math.round(dataInputStream.readInt()  ));
                         }
                         else if (action.equals("WHEEL")){
                             bot.mouseWheel(dataInputStream.readInt());

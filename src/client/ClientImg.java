@@ -30,14 +30,16 @@ public class ClientImg {
         try{
             clientCommand = "REQUEST";
             Socket socket = new Socket();
-            socket.setSoTimeout(200);
-            socket.connect(new InetSocketAddress("192.168.43.69", 3345), 3000);
+            socket.setSoTimeout(20000);
+            socket.connect(new InetSocketAddress(host, 3345), 3000);
             DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
             DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
             BufferedInputStream bufferedInputStream = new BufferedInputStream(socket.getInputStream());
             dataOutputStream.writeUTF(clientCommand);
             dataOutputStream.flush();
+            System.out.println("bufferedinputstream");
             String serverCommand = dataInputStream.readUTF();
+            System.out.println("bufferedREAD");
             if (!serverCommand.equals("STOP")) {
                     byte[] buffer = new byte[280000];
                     BufferedImage newBi;
@@ -67,7 +69,7 @@ public class ClientImg {
                                     isSetSize = true;
                                     clientManagement.setMultiplier(newBi);
                                     board.setMultiplier(newBi);
-                                    clientManagement.startClientManagement(board);
+                                    clientManagement.startClientManagement(board, host);
                                 }
                                 board.setCapture(newBi);
                                 board.repaint();
