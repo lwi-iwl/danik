@@ -98,7 +98,6 @@ public class ServerImg {
                 System.out.println(e.getMessage());
             }
             System.out.println("EXIT");
-            startServer(dialog);
         }).start();
     }
 

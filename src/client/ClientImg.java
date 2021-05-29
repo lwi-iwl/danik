@@ -41,7 +41,7 @@ public class ClientImg {
             String serverCommand = dataInputStream.readUTF();
             System.out.println("bufferedREAD");
             if (!serverCommand.equals("STOP")) {
-                    byte[] buffer = new byte[280000];
+                    byte[] buffer = new byte[380000];
                     BufferedImage newBi;
                     InputStream is = new ByteArrayInputStream(buffer);
                     try {
