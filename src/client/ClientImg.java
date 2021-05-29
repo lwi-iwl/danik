@@ -30,7 +30,6 @@ public class ClientImg {
         try{
             clientCommand = "REQUEST";
             Socket socket = new Socket();
-            socket.setSoTimeout(20000);
             socket.connect(new InetSocketAddress(host, 3345), 3000);
             DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
             DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());

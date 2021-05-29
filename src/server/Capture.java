@@ -7,18 +7,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class Capture {
-    private Robot robot = new Robot();
-    private BufferedImage screenShot;
-    private byte[] bytes;
     public Capture() throws AWTException {
 
     }
-    Boolean isTrue = true;
+    private Boolean isTrue = true;
+    private byte[] bytes;
     public void newCapture(){
         new Thread(() -> {
+            Robot robot = null;
+            try {
+                robot = new Robot();
+            BufferedImage screenShot;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.setUseCache(false);
             while (isTrue) {
                 try {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    baos.reset();
                     screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
                     ImageIO.write(screenShot, "jpeg", baos);
                     bytes = baos.toByteArray();
@@ -28,12 +32,10 @@ public class Capture {
                     e.printStackTrace();
                 }
             }
+            } catch (AWTException e) {
+                e.printStackTrace();
+            }
         }).start();
-    }
-
-    public BufferedImage getCapture() throws IOException {
-        screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
-        return screenShot;
     }
 
     public byte[] getBaos(){

@@ -63,7 +63,8 @@ public class ServerImg {
 
                     byte[] bytes;
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    ImageIO.write(capture.getCapture(), "jpeg", baos);
+                    Robot robot = new Robot();
+                    ImageIO.write(robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize())), "jpeg", baos);
                     bytes = baos.toByteArray();
                     while (!entry.equals("INFSTOP")) {
                         dataOutputStream.writeInt(bytes.length);

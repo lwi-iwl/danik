@@ -1,14 +1,12 @@
 package client;
 
-import server.Capture;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Locale;
 
 public class ClientManagement {
     private float x = 1;
@@ -115,12 +113,27 @@ public class ClientManagement {
                 try {
                     dataOutputStream.writeUTF("KEYPRESS");
                     if (e.getKeyCode() != 0) {
-                        System.out.println();
-                        System.out.println(e.getKeyCode());
-                        dataOutputStream.writeInt(e.getKeyCode());
+                        switch (e.getKeyChar()) {
+                            case (','), ('<') -> dataOutputStream.writeInt(KeyEvent.VK_COMMA);
+                            case ('.'), ('>') -> dataOutputStream.writeInt(KeyEvent.VK_PERIOD);
+                            case (';'), (':') -> dataOutputStream.writeInt(KeyEvent.VK_SEMICOLON);
+                            case ('/'), ('?') -> dataOutputStream.writeInt(KeyEvent.VK_SLASH);
+                            case ('\''), ('"') -> dataOutputStream.writeInt(KeyEvent.VK_QUOTE);
+                            case ('['), ('{') -> dataOutputStream.writeInt(KeyEvent.VK_OPEN_BRACKET);
+                            case (']'), ('}') -> dataOutputStream.writeInt(KeyEvent.VK_CLOSE_BRACKET);
+                            default -> dataOutputStream.writeInt(e.getKeyCode());
+                        }
                     }
                     else {
-                        dataOutputStream.writeInt(KeyEvent.VK_PERIOD);
+                        switch (e.getKeyChar()) {
+                            case ('б'), ('Б') -> dataOutputStream.writeInt(KeyEvent.VK_COMMA);
+                            case ('ю'), ('Ю') -> dataOutputStream.writeInt(KeyEvent.VK_PERIOD);
+                            case ('ж'), ('Ж') -> dataOutputStream.writeInt(KeyEvent.VK_SEMICOLON);
+                            case ('.'), (',') -> dataOutputStream.writeInt(KeyEvent.VK_SLASH);
+                            case ('э'), ('Э') -> dataOutputStream.writeInt(KeyEvent.VK_QUOTE);
+                            case ('х'), ('Х') -> dataOutputStream.writeInt(KeyEvent.VK_OPEN_BRACKET);
+                            case ('ъ'), ('Ъ') -> dataOutputStream.writeInt(KeyEvent.VK_CLOSE_BRACKET);
+                        }
                     }
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
@@ -131,10 +144,29 @@ public class ClientManagement {
             public void keyReleased(KeyEvent e) {
                 try {
                     dataOutputStream.writeUTF("KEYRELEASE");
-                    if (e.getKeyCode() != 0)
-                        dataOutputStream.writeInt(e.getKeyCode());
-                    else
-                        dataOutputStream.writeInt(KeyEvent.VK_PERIOD);
+                    if (e.getKeyCode() != 0) {
+                        switch (e.getKeyChar()) {
+                            case (','), ('<') -> dataOutputStream.writeInt(KeyEvent.VK_COMMA);
+                            case ('.'), ('>') -> dataOutputStream.writeInt(KeyEvent.VK_PERIOD);
+                            case (';'), (':') -> dataOutputStream.writeInt(KeyEvent.VK_SEMICOLON);
+                            case ('/'), ('?') -> dataOutputStream.writeInt(KeyEvent.VK_SLASH);
+                            case ('\''), ('"') -> dataOutputStream.writeInt(KeyEvent.VK_QUOTE);
+                            case ('['), ('{') -> dataOutputStream.writeInt(KeyEvent.VK_OPEN_BRACKET);
+                            case (']'), ('}') -> dataOutputStream.writeInt(KeyEvent.VK_CLOSE_BRACKET);
+                            default -> dataOutputStream.writeInt(e.getKeyCode());
+                        }
+                    }
+                    else {
+                        switch (e.getKeyChar()) {
+                            case ('б'), ('Б') -> dataOutputStream.writeInt(KeyEvent.VK_COMMA);
+                            case ('ю'), ('Ю') -> dataOutputStream.writeInt(KeyEvent.VK_PERIOD);
+                            case ('ж'), ('Ж') -> dataOutputStream.writeInt(KeyEvent.VK_SEMICOLON);
+                            case ('.'), (',') -> dataOutputStream.writeInt(KeyEvent.VK_SLASH);
+                            case ('э'), ('Э') -> dataOutputStream.writeInt(KeyEvent.VK_QUOTE);
+                            case ('х'), ('Х') -> dataOutputStream.writeInt(KeyEvent.VK_OPEN_BRACKET);
+                            case ('ъ'), ('Ъ') -> dataOutputStream.writeInt(KeyEvent.VK_CLOSE_BRACKET);
+                        }
+                    }
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -143,8 +175,8 @@ public class ClientManagement {
     }
 
     public void setMultiplier(BufferedImage image){
-        x = (float)(image.getWidth()/sSize.width/0.9);
-        y = (float)(image.getHeight()/sSize.height/0.9);
+        x = (float)(image.getWidth()/sSize.width/0.9*1.25);
+        y = (float)(image.getHeight()/sSize.height/0.9*1.25);
         System.out.println(x);
     }
 
