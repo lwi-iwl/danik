@@ -23,9 +23,11 @@ public class ClientImg {
     }
     private boolean isSetSize = false;
     private String clientCommand = "REQUEST";
+    private ClientFile clientFile;
     public void startClient(Board board, ServerImg server, StartManage startManage, NewDialog dialog, String host, JFrame jf) throws IOException {
         isSetSize = false;
         ClientManagement clientManagement = new ClientManagement();
+        clientFile = new ClientFile();
         new Thread(() -> {
         try{
             clientCommand = "REQUEST";
@@ -69,6 +71,7 @@ public class ClientImg {
                                     clientManagement.setMultiplier(newBi);
                                     board.setMultiplier(newBi);
                                     clientManagement.startClientManagement(board, host);
+                                    clientFile.startClientFile(board, host);
                                 }
                                 board.setCapture(newBi);
                                 board.repaint();
@@ -120,5 +123,9 @@ public class ClientImg {
     public void setClientCommand(String clientCommand){
         System.out.println("EXIT");
         this.clientCommand = clientCommand;
+    }
+
+    public ClientFile getClientFile(){
+        return clientFile;
     }
 }

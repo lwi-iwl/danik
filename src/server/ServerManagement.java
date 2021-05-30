@@ -87,7 +87,28 @@ public class ServerManagement {
                         }
                         else if (action.equals("KEYRELEASE")){
                             keyInt = dataInputStream.readInt();
-                            bot.keyRelease(keyInt);
+                            try {
+                                bot.keyRelease(keyInt);
+                            }
+                            catch (IllegalArgumentException e){
+                                char c = '?';
+                                switch (keyInt) {
+                                    case KeyEvent.VK_COMMA -> c = 'б';
+                                    case KeyEvent.VK_LESS -> c = 'Б';
+                                    case KeyEvent.VK_PERIOD -> c = 'ю';
+                                    case KeyEvent.VK_GREATER -> c = 'Ю';
+                                    case KeyEvent.VK_SLASH -> c = '.';
+                                    case KeyEvent.VK_SEMICOLON -> c = 'ж';
+                                    case KeyEvent.VK_COLON -> c = 'Ж';
+                                    case KeyEvent.VK_QUOTE -> c = 'э';
+                                    case KeyEvent.VK_QUOTEDBL -> c = 'Э';
+                                    case KeyEvent.VK_OPEN_BRACKET -> c = 'х';
+                                    case KeyEvent.VK_BRACELEFT -> c = 'Х';
+                                    case KeyEvent.VK_CLOSE_BRACKET -> c = 'ъ';
+                                    case KeyEvent.VK_BRACERIGHT -> c = 'Ъ';
+                                }
+                                pressUnicode(c, bot);
+                            }
                         }
                     }
                     catch (SocketException e){

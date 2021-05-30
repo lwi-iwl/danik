@@ -117,7 +117,7 @@ public class ClientManagement {
                         InputContext context2 = InputContext.getInstance();
                         String Language=""+context2.getLocale().getISO3Language();
                         System.out.println(Language);
-                        if ((Language.equals("rus"))&&(e.getKeyCode() == 44))
+                        if ((Language.equals("rus"))&&(e.getKeyCode() == 46))
                             dataOutputStream.writeInt(KeyEvent.VK_SLASH);
                         else
                             dataOutputStream.writeInt(e.getKeyCode());

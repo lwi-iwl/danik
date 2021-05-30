@@ -20,6 +20,7 @@ public class ServerImg {
         new Thread(() -> {
             entry = "STOP";
             ServerManagement serverManagement = new ServerManagement();
+            ServerFile serverFile = new ServerFile();
             try {
                 server = new ServerSocket(3345);
                 server.setSoTimeout(1000);
@@ -59,6 +60,7 @@ public class ServerImg {
                     System.out.println("START");
 
                     serverManagement.startServerManagement();
+                    serverFile.startServerFile();
                     capture.newCapture();
 
                     byte[] bytes;
