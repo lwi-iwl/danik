@@ -2,6 +2,7 @@ package client;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.im.InputContext;
 import java.awt.image.BufferedImage;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -113,16 +114,13 @@ public class ClientManagement {
                 try {
                     dataOutputStream.writeUTF("KEYPRESS");
                     if (e.getKeyCode() != 0) {
-                        switch (e.getKeyChar()) {
-                            case (','), ('<') -> dataOutputStream.writeInt(KeyEvent.VK_COMMA);
-                            case ('.'), ('>') -> dataOutputStream.writeInt(KeyEvent.VK_PERIOD);
-                            case (';'), (':') -> dataOutputStream.writeInt(KeyEvent.VK_SEMICOLON);
-                            case ('/'), ('?') -> dataOutputStream.writeInt(KeyEvent.VK_SLASH);
-                            case ('\''), ('"') -> dataOutputStream.writeInt(KeyEvent.VK_QUOTE);
-                            case ('['), ('{') -> dataOutputStream.writeInt(KeyEvent.VK_OPEN_BRACKET);
-                            case (']'), ('}') -> dataOutputStream.writeInt(KeyEvent.VK_CLOSE_BRACKET);
-                            default -> dataOutputStream.writeInt(e.getKeyCode());
-                        }
+                        InputContext context2 = InputContext.getInstance();
+                        String Language=""+context2.getLocale().getISO3Language();
+                        System.out.println(Language);
+                        if ((Language.equals("rus"))&&(e.getKeyCode() == 44))
+                            dataOutputStream.writeInt(KeyEvent.VK_SLASH);
+                        else
+                            dataOutputStream.writeInt(e.getKeyCode());
                     }
                     else {
                         switch (e.getKeyChar()) {
@@ -145,23 +143,14 @@ public class ClientManagement {
                 try {
                     dataOutputStream.writeUTF("KEYRELEASE");
                     if (e.getKeyCode() != 0) {
-                        switch (e.getKeyChar()) {
-                            case (','), ('<') -> dataOutputStream.writeInt(KeyEvent.VK_COMMA);
-                            case ('.'), ('>') -> dataOutputStream.writeInt(KeyEvent.VK_PERIOD);
-                            case (';'), (':') -> dataOutputStream.writeInt(KeyEvent.VK_SEMICOLON);
-                            case ('/'), ('?') -> dataOutputStream.writeInt(KeyEvent.VK_SLASH);
-                            case ('\''), ('"') -> dataOutputStream.writeInt(KeyEvent.VK_QUOTE);
-                            case ('['), ('{') -> dataOutputStream.writeInt(KeyEvent.VK_OPEN_BRACKET);
-                            case (']'), ('}') -> dataOutputStream.writeInt(KeyEvent.VK_CLOSE_BRACKET);
-                            default -> dataOutputStream.writeInt(e.getKeyCode());
-                        }
+                        dataOutputStream.writeInt(e.getKeyCode());
                     }
                     else {
                         switch (e.getKeyChar()) {
                             case ('б'), ('Б') -> dataOutputStream.writeInt(KeyEvent.VK_COMMA);
                             case ('ю'), ('Ю') -> dataOutputStream.writeInt(KeyEvent.VK_PERIOD);
                             case ('ж'), ('Ж') -> dataOutputStream.writeInt(KeyEvent.VK_SEMICOLON);
-                            case ('.'), (',') -> dataOutputStream.writeInt(KeyEvent.VK_SLASH);
+                            case ('/'), ('?') -> dataOutputStream.writeInt(KeyEvent.VK_SLASH);
                             case ('э'), ('Э') -> dataOutputStream.writeInt(KeyEvent.VK_QUOTE);
                             case ('х'), ('Х') -> dataOutputStream.writeInt(KeyEvent.VK_OPEN_BRACKET);
                             case ('ъ'), ('Ъ') -> dataOutputStream.writeInt(KeyEvent.VK_CLOSE_BRACKET);

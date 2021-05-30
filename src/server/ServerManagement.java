@@ -2,7 +2,10 @@ package server;
 
 
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -56,9 +59,31 @@ public class ServerManagement {
                             bot.mouseWheel(dataInputStream.readInt());
                         }
                         else if (action.equals("KEYPRESS")){
-                            keyInt = dataInputStream.readInt();
-                            System.out.println(keyInt);
-                            bot.keyPress(keyInt);
+                                keyInt = dataInputStream.readInt();
+                                System.out.println(keyInt);
+                            try {
+                                bot.keyPress(keyInt);
+                            }
+                            catch (IllegalArgumentException e){
+                                char c = '0';
+                                switch (keyInt) {
+                                    case KeyEvent.VK_COMMA -> c = 'б';
+                                    case KeyEvent.VK_LESS -> c = 'Б';
+                                    case KeyEvent.VK_PERIOD -> c = 'ю';
+                                    case KeyEvent.VK_GREATER -> c = 'Ю';
+                                    //case KeyEvent.VK_SLASH -> c = '.';
+                                    //case KeyEvent.VK_Q -> c = 'Б';
+                                    case KeyEvent.VK_SEMICOLON -> c = 'ж';
+                                    case KeyEvent.VK_COLON -> c = 'Ж';
+                                    case KeyEvent.VK_QUOTE -> c = 'э';
+                                    case KeyEvent.VK_QUOTEDBL -> c = 'Э';
+                                    case KeyEvent.VK_OPEN_BRACKET -> c = 'х';
+                                    case KeyEvent.VK_BRACELEFT -> c = 'Х';
+                                    case KeyEvent.VK_CLOSE_BRACKET -> c = 'ъ';
+                                    case KeyEvent.VK_BRACERIGHT -> c = 'Ъ';
+                                }
+                                pressUnicode(c, bot);
+                            }
                         }
                         else if (action.equals("KEYRELEASE")){
                             keyInt = dataInputStream.readInt();
@@ -81,5 +106,16 @@ public class ServerManagement {
 
     public ServerSocket getServerManagementSocket(){
         return server;
+    }
+
+    private void pressUnicode(char c, Robot robot) {
+        String cantRecognize = ""+c;
+        StringSelection selection = new StringSelection(cantRecognize);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(selection, null);
+        robot.keyPress(KeyEvent.VK_CONTROL);
+        robot.keyPress(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_CONTROL);
     }
 }
