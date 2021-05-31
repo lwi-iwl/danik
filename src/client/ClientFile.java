@@ -16,9 +16,16 @@ public class ClientFile {
     }
 
     public void dropFile(File file) throws IOException {
-        byte[] fileContent = Files.readAllBytes(file.toPath());
-        dataOutputStream.writeUTF(file.getName());
-        dataOutputStream.writeInt(fileContent.length);
-        dataOutputStream.write(fileContent);
+        new Thread(() -> {
+            byte[] fileContent = new byte[0];
+            try {
+                fileContent = Files.readAllBytes(file.toPath());
+                dataOutputStream.writeUTF(file.getName());
+                dataOutputStream.writeInt(fileContent.length);
+                dataOutputStream.write(fileContent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }

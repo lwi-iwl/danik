@@ -164,8 +164,8 @@ public class ClientManagement {
     }
 
     public void setMultiplier(BufferedImage image){
-        x = (float)(image.getWidth()/sSize.width/0.9*1.25);
-        y = (float)(image.getHeight()/sSize.height/0.9*1.25);
+        x = (float)(image.getWidth()/sSize.width/0.9);
+        y = (float)(image.getHeight()/sSize.height/0.9);
         System.out.println(x);
     }
 

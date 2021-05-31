@@ -26,22 +26,26 @@ public class ServerFile {
                 int quan;
                 String name;
                 while (isTrue) {
-                    name = dataInputStream.readUTF();
-                    quan = dataInputStream.readInt();
-                    System.out.println("Filequan" + quan);
-                    byte [] buffer  = new byte [quan];
-                    int offset = 0;
-                    int bytesRead = 0;
-                    while (offset < quan) {
-                        bytesRead = bufferedInputStream.read(buffer, offset, quan - offset);
-                        offset += bytesRead;
+                    try {
+                        name = dataInputStream.readUTF();
+                        quan = dataInputStream.readInt();
+                        System.out.println("Filequan" + quan);
+                        byte[] buffer = new byte[quan];
+                        int offset = 0;
+                        int bytesRead = 0;
+                        while (offset < quan) {
+                            bytesRead = bufferedInputStream.read(buffer, offset, quan - offset);
+                            offset += bytesRead;
+                        }
+                        try (FileOutputStream fos = new FileOutputStream("C:\\Users\\nikst\\Desktop\\" + name)) {
+                            fos.write(buffer);
+                            fos.flush();
+                        } catch (Exception e) {
+                            System.out.println("FILENOTWRITTEN");
+                        }
                     }
-                    try (FileOutputStream fos = new FileOutputStream("C:\\Users\\nikst\\Downloads\\"+name)) {
-                        fos.write(buffer);
-                        fos.flush();
-                    }
-                    catch (Exception e) {
-                        System.out.println("FILENOTWRITTEN");
+                    catch (SocketException e){
+                        e.getMessage();
                     }
 
                 }
@@ -52,5 +56,9 @@ public class ServerFile {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    public ServerSocket getServerFileSocket(){
+        return server;
     }
 }

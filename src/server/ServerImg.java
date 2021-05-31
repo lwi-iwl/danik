@@ -88,6 +88,7 @@ public class ServerImg {
                     try {
                         server.close();
                         serverManagement.getServerManagementSocket().close();
+                        serverFile.getServerFileSocket().close();
                         startServer(dialog);
                     } catch (Exception e) {
                         e.printStackTrace();
