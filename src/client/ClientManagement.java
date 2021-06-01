@@ -1,5 +1,8 @@
 package client;
 
+import panel.StartManage;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.im.InputContext;
@@ -10,8 +13,7 @@ import java.net.Socket;
 import java.util.Locale;
 
 public class ClientManagement {
-    private float x = 1;
-    private float y = 1;
+    private float multiplier = 1;
     private Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
     public void startClientManagement(Board board, String host) throws IOException {
         Socket socket = new Socket(host, 3346);
@@ -39,14 +41,14 @@ public class ClientManagement {
                 try {
                     if ((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
                         dataOutputStream.writeUTF("PRESSR");
-                        dataOutputStream.writeInt(Math.round(e.getX() * x));
-                        dataOutputStream.writeInt(Math.round(e.getY() * y));
+                        dataOutputStream.writeInt(Math.round(e.getX() * multiplier));
+                        dataOutputStream.writeInt(Math.round(e.getY() * multiplier));
                     }
                     else
                     {
                         dataOutputStream.writeUTF("PRESSL");
-                        dataOutputStream.writeInt(Math.round(e.getX() * x));
-                        dataOutputStream.writeInt(Math.round(e.getY() * y));
+                        dataOutputStream.writeInt(Math.round(e.getX() * multiplier));
+                        dataOutputStream.writeInt(Math.round(e.getY() * multiplier));
                     }
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
@@ -58,13 +60,13 @@ public class ClientManagement {
                 try {
                     if ((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
                         dataOutputStream.writeUTF("RELEASER");
-                        dataOutputStream.writeInt(Math.round(e.getX() * x));
-                        dataOutputStream.writeInt(Math.round(e.getY() * y));
+                        dataOutputStream.writeInt(Math.round(e.getX() * multiplier));
+                        dataOutputStream.writeInt(Math.round(e.getY() * multiplier));
                     }
                     else {
                         dataOutputStream.writeUTF("RELEASEL");
-                        dataOutputStream.writeInt(Math.round(e.getX() * x));
-                        dataOutputStream.writeInt(Math.round(e.getY() * y));
+                        dataOutputStream.writeInt(Math.round(e.getX() * multiplier));
+                        dataOutputStream.writeInt(Math.round(e.getY() * multiplier));
                     }
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
@@ -79,8 +81,8 @@ public class ClientManagement {
             public void mouseMoved(MouseEvent e) {
                 try {
                     dataOutputStream.writeUTF("MOVE");
-                    dataOutputStream.writeInt(Math.round(e.getX() * x));
-                    dataOutputStream.writeInt(Math.round(e.getY() * y));
+                    dataOutputStream.writeInt(Math.round(e.getX() * multiplier));
+                    dataOutputStream.writeInt(Math.round(e.getY() * multiplier));
 
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
@@ -93,8 +95,8 @@ public class ClientManagement {
                 try {
                     System.out.println("MOVE");
                     dataOutputStream.writeUTF("MOVE");
-                    dataOutputStream.writeInt(Math.round(e.getX()*x));
-                    dataOutputStream.writeInt(Math.round(e.getY()*y));
+                    dataOutputStream.writeInt(Math.round(e.getX()*multiplier));
+                    dataOutputStream.writeInt(Math.round(e.getY()*multiplier));
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -164,8 +166,11 @@ public class ClientManagement {
     }
 
     public void setMultiplier(BufferedImage image){
-        x = (float)(image.getWidth()/sSize.width/0.9);
-        y = (float)(image.getHeight()/sSize.height/0.9);
+        double x = 1;
+        double y = 1;
+        x = (double)(image.getWidth()/sSize.width/0.9);
+        y = (double)(image.getHeight()/sSize.height/0.9);
+        multiplier = (float)Math.max(x, y);
         System.out.println(x);
     }
 

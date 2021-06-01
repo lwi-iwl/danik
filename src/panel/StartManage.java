@@ -50,6 +50,10 @@ public class StartManage {
         jf.setVisible(true);
     }
 
+    public void setSize(int width, int height){
+        jf.setSize(width, height);
+    }
+
     public void startManageExit(){
         jf.setVisible(false);
     }

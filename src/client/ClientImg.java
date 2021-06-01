@@ -69,7 +69,7 @@ public class ClientImg {
                                     jf.setVisible(false);
                                     isSetSize = true;
                                     clientManagement.setMultiplier(newBi);
-                                    board.setMultiplier(newBi);
+                                    board.setMultiplier(newBi, startManage);
                                     clientManagement.startClientManagement(board, host);
                                     clientFile.startClientFile(board, host);
                                 }

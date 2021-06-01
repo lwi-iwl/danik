@@ -10,7 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 
-public class Panel {
+public class Panel{
     private final JPanel panel;
     private ServerImg server = new ServerImg();
 
@@ -23,8 +23,8 @@ public class Panel {
         StartManage startManage = new StartManage(client, board);
         panel = new JPanel();
         panel.setLayout(null);
-
-        JLabel ipText = new JLabel(" Ваш IP:" + new GetIP().getIP());
+        GetIP getIP = new GetIP();
+        JLabel ipText = new JLabel(" Ваш IP:" + getIP.getIP());
         ipText.setFont(new Font("Serif", Font.PLAIN, 25));
         ipText.setBackground(new Color(0, 191, 255));
         ipText.setSize(sSize.width / 2,40);
@@ -64,7 +64,8 @@ public class Panel {
         clientButton.setLayout(null);
         clientButton.addActionListener(e -> {
             try {
-                client.startClient(board, server, startManage, dialog, textField.getText(), start);
+                if ((!getIP.getIP().equals(textField.getText())) && (!textField.getText().equals("localhost")) && (!textField.getText().equals("127.0.0.1")))
+                    client.startClient(board, server, startManage, dialog, textField.getText(), start);
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -79,6 +80,5 @@ public class Panel {
     public ServerImg getServer(){
         return server;
     }
-
 
 }

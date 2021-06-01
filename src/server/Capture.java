@@ -28,7 +28,7 @@ public class Capture {
                     bytes = baos.toByteArray();
                     System.out.println("newcapture");
                 }
-                catch (IOException | NullPointerException e) {
+                catch (Exception e) {
                     e.printStackTrace();
                 }
             }
